@@ -13,18 +13,19 @@ function usePrevious(value) {
 const TableBox = ({ table = [] }) => {
   const rows = table.length;
   const columns = table.reduce((prev, row) => Math.max(prev, row.length), 0);
-  const tableBox = new Array(rows)
-    .fill(1)
-    .map((_, i) =>
-      new Array(columns)
-        .fill(1)
-        .map((_, j) => (table[i][j] !== undefined ? table[i][j] : null))
-    );
+  const tableBox = new Array(rows).fill(1).map((_, i) =>
+    new Array(columns).fill(1).map((_, j) => {
+      return table[i][j] !== undefined ? table[i][j] : null;
+    })
+  );
 
   const isUpdated = React.useCallback(
     (row, column) => {
       if (previousTable !== null) {
-        return table[row][column] !== previousTable[row][column];
+        return (
+          previousTable[row] === undefined ||
+          table[row][column] !== previousTable[row][column]
+        );
       }
       return false;
     },
@@ -41,8 +42,8 @@ const TableBox = ({ table = [] }) => {
     <section
       css={css`
         display: grid;
-        grid-template-columns: ${new Array(rows).fill("30px").join(" ")};
-        grid-template-rows: ${new Array(columns).fill("30px").join(" ")};
+        grid-template-rows: ${new Array(rows).fill("30px").join(" ")};
+        grid-template-columns: ${new Array(columns).fill("30px").join(" ")};
         grid-gap: 3px;
       `}
     >
